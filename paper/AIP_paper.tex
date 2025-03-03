@@ -15,6 +15,7 @@ reprint,%
 \usepackage{tabularx}
 \usepackage{float}
 \usepackage[caption=false,font=footnotesize]{subfig}
+\usepackage{cleveref}
 
 \begin{document}
 	
@@ -24,7 +25,7 @@ reprint,%
 	\email{sz4961@srmist.edu.in}
 	\affiliation{Department of Computer Science Engineering, SRM Institute of Science and Technology, Chennai, India}
 	
-	\author{Krishnaraj N}
+	\author{Dr.Krishnaraj N}
 	\email{krishnan2@srmist.edu.in}
 	\affiliation{Department of Networking And Communications, SRM Institute of Science and Technology, Chennai, India}
 	
@@ -55,13 +56,7 @@ reprint,%
 	\section{\label{sec:intro}Introduction}
 	Task assignment in industrial settings, for both people or machines, is a hard
 	problem to solve while achieving smooth operations and strong employee management.
-	This problem comes from the math of sharing resources and the mix of skills
-	with human workload in today's workplaces.
-	
-	Modern businesses must run well while keeping employees happy. Old ways of scheduling
-	tasks following fixed rules and simple ideas do not work in work settings that
-	change fast, with work orders moving quickly and staff levels shifting because
-	of changing company and personal needs.
+	This because of the requirement of optimal task assignments taking account of the limit of employees, hours skills and  efficiency. As Zhang et al. (2022) have shown, old ways of scheduling tasks according to fixed rules and simple ideas do not work in fast changing work settings, for example, heuristic based methods cannot effectively deal with dynamic job-shop environments with uncertainties such as unexpected machine failures and rapidly changing market demands\cite{zhang2022, li2024}.
 	
 	\subsection{\label{subsec:challenges}Challenges Across Sectors}
 	This problem compounds even more in different sectors that rely heavily on
@@ -72,17 +67,9 @@ reprint,%
 	varying demand.
 	
 	\subsection{\label{subsec:remote}Impact of Remote Work}
-	To make matters complicated the increase in remote and hybrid work has
-	complicated scheduling and task assignments. Companies must consider time zones,
-	the nature of employee availability and frequent attrition. Old ways of scheduling
-	and assignments based on "first come first assign" kind of greedy methodologies
-	do not really gell well with the fast moving nature of modern businesses.
+	To make matters complicated the increase in remote and hybrid work has complicated scheduling and task assignments.Remote work offers enhanced flexibility and autonomy, allowing employees to manage their work schedules and surroundings, thereby fostering a better work-life balance \cite{wang2023}. Companies must take in to account: time zones, the nature of employee availability, sharing of employee between projects, their skills and frequent attrition. Old ways of scheduling and assignments based on "first come first assign" kind of greedy methodologies do not really fit well with the fast moving nature of modern businesses.
 	
-	\begin{figure}
-		\centering
-		\includegraphics[width=0.7\linewidth]{figures/Initial_flow}
-		\caption{\label{fig:flow}Proposed methodology}
-	\end{figure}
+	
 	
 	\subsection{\label{subsec:hybrid}Proposed Hybrid Approach}
 	This study proposes a framework (Fig.~\ref{fig:flow}) for the complex task
@@ -98,6 +85,12 @@ reprint,%
 	them using a state representation that captures the workload, assignment, and unassigned
 	tasks. Ultimately, the goal is to maximize a skill-level-based workload allocation
 	and task assignment rate.
+	
+	\begin{figure}[!hb]
+		\centering
+		\includegraphics[width=0.3\linewidth]{figures/Initial_flow}
+		\caption{\label{fig:flow}Proposed methodology}
+	\end{figure}
 	
 	\subsection{\label{subsec:significance}Significance}
 	Significance of this study comes from the integration of Reinforcement Learning
@@ -124,6 +117,10 @@ reprint,%
 	replace them. The paper examines previous studies which examine reinforcement learning
 	alongside associated optimization approaches for workload distribution and task
 	distribution and scheduling in uncertain environments.
+	
+	Dynamic scheduling in job shops is difficult due to unexpected events. Ren and Liu~\cite{li2024} have developed a method that combines MachineRank assessments of machine utilization (including incoming jobs for processing at machines and outgoing ones) with D3QN to dynamically adjust schedules to improve the maximum completion times and increase on-time job completions.
+	
+	In similar scenario, Zhang et al.~\cite{zhang2022} have used Proximal Policy Optimization (PPO), a form of Deep Reinforcement Learning, to focus their efforts. Their approach adapted quickly to actual failures when tested with them, whereas conventional techniques lagged behind.
 	
 	The research by Infantes et al.~\cite{infantes2024} explores Deep
 	Reinforcement Learning (DRL) solutions for Job-Shop Scheduling Problems (JSSP)
@@ -171,6 +168,19 @@ reprint,%
 	method ACO demonstrates great effectiveness when solving hard-to-tackle optimization
 	problems. The review presents hybridization methods which use reinforcement
 	learning to enhance task allocation efficiency.
+	
+	Sreyas Ramesh \textit{et al.}~\cite{turn0file0} investigate the application of Q-learning, SARSA, and deep Q-networks (DQN) for microgrid energy management. The authors compare these reinforcement learning methods in a simulated microgrid environment and demonstrate that while DQN achieves superior performance, traditional techniques like Q-learning and SARSA offer advantages in terms of computational simplicity and ease of implementation.
+	
+	Sivamayil \textit{et al.}~\cite{turn0file1} provide a systematic study of reinforcement learning applications across diverse domains, including energy management, robotics, and finance. Their review categorizes RL methodologies and highlights that the choice between value-based and policy-based approaches, such as Q-learning and SARSA, should be guided by the specific dynamics and requirements of the application at hand.
+	
+	In \cite{Corazza2015}, the authors address a stochastic control problem by comparing two reinforcement learning algorithms: Q-Learning and SARSA. The study focuses on developing an intelligent trading system that operates under the Adaptive Market Hypothesis. Both algorithms are tested on simulated and real stock price time series, with the research emphasizing the trade-offs between off-policy and on-policy learning methods in adapting to non-stationary market conditions. Their results demonstrate that while both methods are capable of adapting trading strategies based on real-time feedback, nuances in learning rates and exploration strategies critically impact overall performance.
+	
+	For this study we use Optuna by T. Akiba et al \cite{Akiba2019Optuna}. Optuna is a next generation hyperparameter optimization framework which provides a define-by-run API to build complex search spaces, and easily tune hyperparameters in an interactive as well as a distributed manner, compared to the static static methods.
+	
+	We also use Upper Confidence Bound (UCB) strategy. In their study \cite{Wang2023TaskScheduling}, Wang et al propose a new reinforcement learning (RL) framework, Q-learning based Multi-Task Scheduling Framework (QMTSF), for cloud task scheduling. Their approach consists of a two-stage process where tasks are first dynamically allocated to appropriate servers and then scheduled to virtual machines (VMs) using an enhanced Q-learning algorithm that incorporates the Upper Confidence Bound (UCB) strategy.By leveraging the UCB strategy—which balances exploration (trying new actions) and exploitation (using known rewards) and is more efficient than traditional methods such as the epsilon-greedy approach—the algorithm achieves faster convergence. Consequently, QMTSF reduces the overall makespan (i.e., the total time to complete all tasks) and average task processing time, as well as enhances energy efficiency and CPU utilization in the dynamic and heterogeneous cloud computing environment.
+	
+	Sutton and Barto’s \textit{Reinforcement Learning: An Introduction}\cite{SuttonBarto1998} is a go-to guide for anyone curious about Reinforcement Learning. This scholarly work elaborates algorithms like Q learning and policy iteration in detailed manner.
+	
 	
 	\section{\label{sec:problem}Problem Formulation}
 	
@@ -241,8 +251,8 @@ reprint,%
 		sequenced tasks, a centralized learning agent dynamically assigns tasks to
 		employees. This process considers the current state of assignments, available
 		work hours, and skill matches, and it is designed to adapt through an exploration–exploitation
-		mechanism. Two reinforcement learning strategies are applied to refine
-		decision-making during the assignment process.
+		mechanism. Q -learning and SARSA are applied to refine
+		decision-making during the assignment process. We are using these two algorithms to compare them.
 		
 		\item \textbf{Post-Assignment Refinement:} Following the initial allocation,
 		a dedicated refinement module iteratively adjusts the task-to-employee mapping.
@@ -264,10 +274,7 @@ reprint,%
 	
 	\subsection{\label{subsec:rl-framework}Reinforcement Learning Framework}
 	
-	To accommodate multi-column layouts, we include short in-text equations and place a wide table at the bottom or top of the page. Let $N$ be the total number of employees.
-	
-	\paragraph{State Definition.}
-	We denote the RL state as 
+	Let $N$ be the total number of employees. We define the RL state as 
 	\begin{equation}
 		s = \bigl(i,\,\mathbf{H},\,\mathbf{A},\,\mathbf{F}\bigr)
 	\end{equation}
@@ -279,17 +286,16 @@ reprint,%
 		\item $\mathbf{F}$: binned features such as priority or due date.
 	\end{itemize}
 	
-	\paragraph{Reward Function.}
-	At each step, the agent receives:
+	At each step, the agent receives a reward:
 	\begin{equation}
 		r(s,a) = R_{\text{feas}} + R_{\text{penalty}} + R_{\text{balance}} + R_{\text{efficiency}}
 	\end{equation}
-	with terms
+	
 	\begin{align}
-		R_{\text{feas}}(s,a) &= \lambda\,p_{t}\,\mathbb{I}\{\text{feasible}\} \\
-		R_{\text{penalty}}(s,a) &= -\,\kappa\,\mathbb{I}\{\text{violation}\}-\nu\,\mathbb{I}\{\text{priority skip}\} \\
-		R_{\text{balance}}(s,a) &= \alpha\!\Bigl(\,1-\tfrac{\sigma(W)}{\overline{W}}\Bigr) \\
-		R_{\text{efficiency}}(s,a) &= \eta\,\tfrac{\Delta\tau}{\tau}
+		R_{\text{feas}}(s,a)       & = \lambda\,p_{t}\,\mathbb{I}\{\text{feasible}\}                                     \\
+		R_{\text{penalty}}(s,a)    & = -\,\kappa\,\mathbb{I}\{\text{violation}\}-\nu\,\mathbb{I}\{\text{priority skip}\} \\
+		R_{\text{balance}}(s,a)    & = \alpha\!\Bigl(\,1-\tfrac{\sigma(W)}{\overline{W}}\Bigr)                           \\
+		R_{\text{efficiency}}(s,a) & = \eta\,\tfrac{\Delta\tau}{\tau}                                                    
 	\end{align}
 	where $\lambda,\kappa,\nu,\alpha,\eta$ are weighting constants; $p_{t}$ indicates the task's priority; $\sigma(W),\overline{W}$ are the standard deviation and mean of assigned hours; and $\Delta\tau/\tau$ measures how much an employee's efficiency reduces task duration.
 	
@@ -307,35 +313,41 @@ reprint,%
 	\end{equation}
 	where $\beta_{1},\beta_{2},\beta_{3}$ weight the emphasis on skill--task alignment ($R_{\text{match}}$), workload fairness ($R_{\text{imbalance}}$), and additional efficiency gains ($R_{\text{eff}}$).
 	
-	\begin{table}
+	\begin{table}[!hb]
 		\caption{\label{tab:notation}Notation and Descriptions}
 		\begin{ruledtabular}
 			\begin{tabular}{ll}
-				\textbf{Symbol} & \textbf{Description} \\
+				\textbf{Symbol}                  & \textbf{Description}                                   \\
 				\hline
-				$i$ & Index in the task sequence\\
-				$\mathbf{H}$ & Residual hours vector, $\bigl[h_{1},\dots,h_{N}\bigr]$\\
-				$\mathbf{A}$ & Binary assignment record \\
-				$\mathbf{F}$ & Binned task features (priority, due date)\\
-				$s$ & RL state in (1)\\
-				$r(s,a)$ & RL reward in (2)\\
-				$\lambda,\kappa,\nu,\alpha,\eta$ & RL weighting constants\\
-				$p_{t}$ & Priority of the current task\\
-				$\sigma(W), \overline{W}$ & Std.\ dev.\ and mean of assigned hours\\
-				$\tfrac{\Delta\tau}{\tau}$ & Relative reduction in task duration (efficiency)\\
-				$S$ & Refinement state in (7)\\
-				$\mathbf{W}$ & Workloads: $\bigl[w_{1},\dots,w_{N}\bigr]$\\
-				$M$ & Task--employee mapping \\
-				$U$ & Set of unassigned tasks\\
-				$r_{\text{ref}}(S,a)$ & Refinement reward in (8)\\
-				$\beta_{1},\beta_{2},\beta_{3}$ & Refinement reward coefficients\\
+				$i$                              & Index in the task sequence                             \\
+				$\mathbf{H}$                     & Residual hours vector, $\bigl[h_{1},\dots,h_{N}\bigr]$ \\
+				$\mathbf{A}$                     & Binary assignment record                               \\
+				$\mathbf{F}$                     & Binned task features (priority, due date)              \\
+				$s$                              & RL state in (1)                                        \\
+				$r(s,a)$                         & RL reward in (2)                                       \\
+				$\lambda,\kappa,\nu,\alpha,\eta$ & RL weighting constants                                 \\
+				$p_{t}$                          & Priority of the current task                           \\
+				$\sigma(W), \overline{W}$        & Std.\ dev.\ and mean of assigned hours                 \\
+				$\tfrac{\Delta\tau}{\tau}$       & Relative reduction in task duration (efficiency)       \\
+				$S$                              & Refinement state in (7)                                \\
+				$\mathbf{W}$                     & Workloads: $\bigl[w_{1},\dots,w_{N}\bigr]$             \\
+				$M$                              & Task--employee mapping                                 \\
+				$U$                              & Set of unassigned tasks                                \\
+				$r_{\text{ref}}(S,a)$            & Refinement reward in (8)                               \\
+				$\beta_{1},\beta_{2},\beta_{3}$  & Refinement reward coefficients                         \\
 			\end{tabular}
 		\end{ruledtabular}
 	\end{table}
 	
 	\section{\label{sec:algo}Algorithmic Architecture and Design}
 	
-	In dynamic operational environments, the challenge of scheduling tasks and allocating them to a diverse workforce demands a robust and adaptable framework. Our system integrates heuristic optimization via Ant Colony Optimization (ACO), centralized reinforcement learning (RL) for task assignment, and an iterative post-assignment refinement process—all underpinned by automated hyperparameter tuning using Optuna.
+	In dynamic operational environments, the challenge of scheduling tasks and allocating them to a diverse workforce demands a robust and adaptable framework. Our system integrates heuristic optimization via Ant Colony Optimization (ACO), centralized reinforcement learning (RL) for task assignment, and an iterative post-assignment refinement process—all underpinned by automated hyperparameter tuning using Optuna. The architecture diagram (Fig.~\ref{fig:flow}) provides a detailed logic and data flow.
+	
+	\begin{figure}[!hb]
+		\centering
+		\includegraphics[width=1\linewidth]{figures/overall_architecture.png}
+		\caption{\label{fig:arch}Architecture Diagram}
+	\end{figure}
 	
 	\subsection{\label{subsec:framework}Framework Overview}
 	
@@ -374,74 +386,48 @@ reprint,%
 	\end{equation}
 	Here, the refinement parameters $\alpha_r$ and $\gamma_r$ are tuned specifically to improve workload balance and alignment with employee skills.
 	
-	\subsection{\label{subsec:hyperparameter}Hyperparameter Optimization and Experimental Evaluation}
-	
-	A standout feature of the design is the integration of automated hyperparameter tuning using Optuna. This module optimizes key parameters for both the ACO and RL components (such as learning rates, discount factors, exploration decay, and pheromone parameters) through a multi-objective process. The objectives are to maximize the proportion of tasks assigned and to minimize the variance of the reward signal. Extensive experimental trials yield Pareto-optimal configurations, with detailed visualizations and reports generated for comprehensive performance analysis.
-	
-	\subsection{\label{subsec:legend}Legend of Symbols}
-	
-	Here are the symbols used in this section
-	
-	\begin{table}
+	\begin{table}[!ht]
 		\caption{\label{tab:legend}Legend of Symbols}
 		\begin{ruledtabular}
 			\begin{tabular}{ll}
-				\textbf{Symbol} & \textbf{Description} \\
+				\textbf{Symbol}    & \textbf{Description}                                       \\
 				\hline
-				$i$ & Current task index \\
-				$\mathbf{P}$ & Pheromone matrix \\
-				$\eta_{ij}$ & Heuristic value for transitioning from task $t_i$ to $t_j$ \\
-				$\rho$ & Pheromone evaporation rate \\
-				$s, s'$ & RL states before and after an action \\
-				$a, a'$ & Actions chosen in the current and subsequent states \\
-				$\alpha, \alpha_r$ & Learning rates for initial assignment and refinement \\
-				$\gamma, \gamma_r$ & Discount factors for initial assignment and refinement \\
-				$\epsilon$ & Exploration rate in RL \\
-				$\mathbf{H}$ & Vector of residual working hours \\
-				$r$ & Immediate reward signal \\
-				$\mathcal{S}$ & State representation for refinement \\
-				$M$ & Task-to-employee mapping \\
-				$U$ & Set of unassigned tasks \\
+				$i$                & Current task index                                         \\
+				$\mathbf{P}$       & Pheromone matrix                                           \\
+				$\eta_{ij}$        & Heuristic value for transitioning from task $t_i$ to $t_j$ \\
+				$\rho$             & Pheromone evaporation rate                                 \\
+				$s, s'$            & RL states before and after an action                       \\
+				$a, a'$            & Actions chosen in the current and subsequent states        \\
+				$\alpha, \alpha_r$ & Learning rates for initial assignment and refinement       \\
+				$\gamma, \gamma_r$ & Discount factors for initial assignment and refinement     \\
+				$\epsilon$         & Exploration rate in RL                                     \\
+				$\mathbf{H}$       & Vector of residual working hours                           \\
+				$r$                & Immediate reward signal                                    \\
+				$\mathcal{S}$      & State representation for refinement                        \\
+				$M$                & Task-to-employee mapping                                   \\
+				$U$                & Set of unassigned tasks                                    \\
 			\end{tabular}
 		\end{ruledtabular}
 	\end{table}
 	
+	
+	\subsection{\label{subsec:hyperparameter}Hyperparameter Optimization and Experimental Evaluation}
+	
+	A standout feature of the design is the integration of automated hyperparameter tuning using Optuna. This module optimizes key parameters for both the ACO and RL components (such as learning rates, discount factors, exploration decay, and pheromone parameters) through a multi-objective process. The objectives are to maximize the proportion of tasks assigned and to minimize the variance of the reward signal. Extensive experimental trials yield Pareto-optimal configurations, with detailed visualizations and reports generated for comprehensive performance analysis.
+	
 	\section{\label{sec:inference}Inference and Discussion}
-	The experimental results demonstrate that the proposed hybrid framework significantly
-	enhances the balance of task assignments among employees without compromising overall
-	assignment rates or deadline compliance. Unlike traditional heuristic methods,
-	which often concentrate tasks among a few specialized workers, our integration
-	of reinforcement learning with ant colony optimization intrinsically accounts
-	for workload distribution.
+	Based on the simulation results we can notice that generated tasks are sorted by ACO step (\cref{fig:aco_sequence}) and also it combined with RL steps enhances the balance of task assignments among employees without compromising overall
+	assignment rates or deadline compliance (\cref{fig:workload_balance_ratio,fig:greedy,fig:q_learning,fig:sarsa}).
 	
 	\subsection{\label{subsec:workload}Workload Distribution Insights}
-	Our findings indicate that greedy assignment methods typically overload a
-	subset of employees due to repeated allocation of tasks that match their skill
-	profiles. This concentration not only creates bottlenecks but also elevates the
-	risk of fatigue and reduces overall efficiency. By integrating a workload
-	balancing term into the reward function, the reinforcement learning module gradually
-	redistributes tasks more evenly. As a result, the refined policies exhibit a substantial
+	Results from the simulation (Fig.~\ref{fig:workload_balance_ratio}) indicate that greedy assignment methods typically overload a subset of employees due to repeated allocation of tasks that match their skill profiles. This concentration not only creates bottlenecks but also elevates the risk of fatigue and reduces overall efficiency. By integrating a workload balancing term into the reward function, the reinforcement learning module gradually redistributes tasks more evenly. As a result, the refined policies exhibit a substantial
 	reduction in workload variance, as evidenced by a lower standard deviation of
-	assigned hours relative to baseline approaches.
+	assigned hours relative to baseline approaches. This indicates that `RefinementRL` is working as intended. Notice how the Boring and Drilling tasks are handled in Greedy vs Refined Q-learning or SARSA  (\cref{fig:greedy,fig:q_learning,fig:sarsa}). Refined algorithms display better work balancing.
 	
-	\subsection{\label{subsec:resource}Resource Utilization and Task Coverage}
-	An equitable distribution of tasks also enhances overall resource utilization.
-	The hybrid framework ensures that no single resource becomes a critical point of
-	failure by reallocating less urgent tasks to underutilized employees. This
-	reallocation enables specialized personnel to concentrate on high-priority
-	assignments, leading to improved long-term performance, decreased burnout risk,
-	and more sustainable operational practices. Notably, high task coverage and timely
-	completion are maintained even as the system emphasizes balanced workload distribution.
+	\subsection{\label{subsec:rationale}Reward Dynamics}
+	During both the initial and refinement stages, the reward structure used by the reinforcement learning components directly improved the workload balance. The reward functions penalized excessive task concentration instead of just encouraging rapid task completion tied to strict deadlines. Through multiple training episodes, the RL agents learned and internalized the cost of overburdening certain employees, which led to more even distribution of work and achieved the dual goals of efficiency and fairness in the scheduling process.
 	
-	\subsection{\label{subsec:rationale}Algorithmic Rationale}
-	The observed improvements in workload balance can be directly attributed to the
-	modified reward structure employed by the reinforcement learning component.
-	Rather than solely incentivizing rapid task completion and strict adherence to
-	deadlines, the reward function penalizes excessive task concentration. Over
-	multiple training episodes, the RL agents learn to recognize and internalize the
-	cost of overburdening specific employees, thereby promoting a more uniform
-	distribution of work. This adaptive learning mechanism effectively reconciles the
-	dual objectives of efficiency and fairness within the scheduling process.
+	The 70:30 epsilon decay schedule and the UCB mechanism complemented each other to improve reward performance. The UCB mechanism gave an exploration bonus to actions that were less visited, so that the agent would explore other actions before declaring an action optimal. The agents were able to learn better action value estimates earlier in this balanced exploration. In the meantime, the 70:30 decay schedule decreased the exploration rate during the first 70\% of the episodes (exploration vs exploitation) and kept a stable low exploration regime in the last 30\% of training. Together these strategies let the agents learn more robustly, with a steadily increasing moving average of rewards during training(\cref{fig:rewards_training}).
 	
 	\subsection{\label{subsec:tradeoffs}Practical Trade-offs and Future Considerations}
 	Although the hybrid ACO-RL framework markedly improves workload distribution,
@@ -454,56 +440,43 @@ reprint,%
 	advances scheduling methodologies but also contributes to more resilient and sustainable
 	workforce management.
 	
-	\begin{figure*}
-		\centering
-		\subfloat[Q-learning Before\label{fig:ql_before}]{%
-			\includegraphics[width=0.31\textwidth]{figures/Qlearning_Before.png}
-		}
-		\hfill
-		\subfloat[SARSA Before\label{fig:sarsa_before}]{%
-			\includegraphics[width=0.31\textwidth]{figures/SARSA_Before.png}
-		}
-		\hfill
-		\subfloat[Greedy\label{fig:greedy}]{%
-			\includegraphics[width=0.31\textwidth]{figures/Greedy.png}
-		}
-		\caption{\label{fig:baseline}Comparison of baseline scheduling approaches.}
-	\end{figure*}
 	
-	\begin{figure*}
-		\centering
-		\subfloat[Refined Q-learning\label{fig:ql_refined}]{%
-			\includegraphics[width=0.31\textwidth]{figures/Refined_Qlearning.png}
-		}
-		\hfill
-		\subfloat[Refined SARSA\label{fig:sarsa_refined}]{%
-			\includegraphics[width=0.31\textwidth]{figures/Refined_SARSA.png}
-		}
-		\caption{\label{fig:refined}Comparison of refined scheduling approaches.}
-	\end{figure*}
+	\subsection{\label{subsec:plots}Plots from the Simulation}
 	
-	\begin{figure}
+	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.45\textwidth]{figures/Workload_Balance_Ratio.png}
+		\includegraphics[width=1\textwidth]{figures/aco_network.png}
+		\caption{\label{fig:aco_sequence}Illustration of the Ant Colony Optimization (ACO) task sequence.}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\textwidth]{figures/workload_balance_ratio_comparison.png}
 		\caption{\label{fig:workload_balance_ratio}Workload Balance Ratio (lower is better) by assignment method.}
 	\end{figure}
 	
-	\begin{figure}
+	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.45\textwidth]{figures/Rewards_During_Training.png}
-		\caption{\label{fig:rewards_training}Rewards during training (every 50 episodes).}
+		\includegraphics[width=1\textwidth]{figures/gantt_greedy.png}
+		\caption{\label{fig:greedy}Assignments by Greedy method}
 	\end{figure}
 	
-	\begin{figure}
+	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.45\textwidth]{figures/Epsilon_Decay.png}
-		\caption{\label{fig:epsilon_decay}Exploration rate ($\epsilon$) decay during training.}
+		\includegraphics[width=1\textwidth]{figures/gantt_sarsa_after.png}
+		\caption{\label{fig:sarsa}Assignments by SARSA after Refinement}
 	\end{figure}
 	
-	\begin{figure}
+	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.45\textwidth]{figures/ACO_Task_Sequence.png}
-		\caption{\label{fig:aco_sequence}Illustration of the Ant Colony Optimization (ACO) task sequence.}
+		\includegraphics[width=1\textwidth]{figures/workload_balance_ratio_comparison.png}
+		\caption{\label{fig:q_learning}Assignments by Q-learning after Refinement}
+	\end{figure}
+	
+	\begin{figure}[H]
+		\centering
+		\includegraphics[width=1\textwidth]{figures/rewards_history.png}
+		\caption{\label{fig:rewards_training}Rewards during training (with 50 MA).}
 	\end{figure}
 	
 	\section{\label{sec:future}Future Work}
@@ -519,7 +492,7 @@ reprint,%
 		and nuanced employee characteristics more effectively.
 		
 		\item \textbf{Hybrid Optimization Techniques:} Integrating additional
-		metaheuristic or evolutionary algorithms with ACO may lead to improved
+		meta-heuristic or evolutionary algorithms with ACO may lead to improved
 		task sequencing. Investigating hybrid models that merge global search capabilities
 		with localized refinement strategies could further optimize scheduling performance.
 		
@@ -560,9 +533,26 @@ reprint,%
 		in shaping the direction and success of this work.
 	\end{acknowledgments}
 	
+	
 	\nocite{*}
 	
 	\begin{thebibliography}{99}
+
+		
+		\bibitem{SuttonBarto1998}
+		R.~S. Sutton and A.~G. Barto, \emph{Reinforcement Learning: An Introduction}, MIT Press, 1998.
+		
+		\bibitem{li2024}
+		J. Li, L. Zhang, Z. Li, and S. Zhang, ``Dynamic scheduling for flexible job shop based on MachineRank with deep reinforcement learning,'' \textit{Sci. Rep.}, vol. 14, no. 1, p. 12345, 2024. doi:10.1038/s41598-024-79593-8.
+		
+		\bibitem{zhang2022}
+		M. Zhang, Y. Lu, Y. Hu, N. Amaitik, and Y. Xu, ``Dynamic Scheduling Method for Job-Shop Manufacturing Systems by Deep Reinforcement Learning with Proximal Policy Optimization,'' \textit{Sustainability}, vol. 14, no. 9, p. 5177, 2022. doi:10.3390/su14095177.
+		
+		
+		
+		\bibitem{wang2023}
+		Wang B, Liu Y, Qian J, Parker SK. The remote revolution: assessing the impact of working from home on employees' productivity and work-life balance. \textit{Future Business Journal}. 2023;9(1):1-14. doi:10.1186/s43093-024-00345-1.
+		
 		\bibitem{infantes2024} G. Infantes et al., ``Learning to Solve Job Shop Scheduling
 		under Uncertainty,'' CPAIOR, 2024.
 		
@@ -590,6 +580,29 @@ reprint,%
 		\bibitem{dorigo2016} M. Dorigo and T. Stützle, ``Ant colony optimization:
 		Overview and recent advances,'' in \textit{Handbook of Metaheuristics}, 3rd
 		ed. Springer, 2016, pp. 311-351.
+		
+		\bibitem{turn0file0} S. Ramesh, S. B. N., S. J. Sathyavarapu, V. Sharma, N. K. A. A., and M. Khanna, ``Comparative analysis of Q-learning, SARSA, and deep Q-network for microgrid energy management,'' \textit{Scientific Reports}, vol. 15, p. 694, 2025, doi:10.1038/s41598-024-83625-8.
+		
+		\bibitem{turn0file1} K. Sivamayil, E. Rajasekar, B. Aljafari, S. Nikolovski, S. Vairavasundaram, and I. Vairavasundaram, ``A systematic study on reinforcement learning based applications,'' \textit{Energies}, vol. 16, p. 1512, 2023, doi:10.3390/en16031512.
+		
+		\bibitem{Corazza2015} 
+		M. Corazza and A. Sangalli, ``Q-Learning and SARSA: A Comparison between Two Intelligent Stochastic Control Approaches for Financial Trading,'' Working Paper, Ca’ Foscari University of Venice, 2015. Available: \url{https://ssrn.com/abstract=2617630}.
+		
+		\bibitem{Mavrovouniotis2023} 
+		M. Mavrovouniotis, M. N. Anastasiadou, and D. Hadjimitsis, ``Measuring the Performance of Ant Colony Optimization Algorithms for the Dynamic Traveling Salesman Problem,'' \textit{Algorithms}, vol. 16, no. 545, 2023, doi: 10.3390/a16120545. Available: \url{https://doi.org/10.3390/a16120545}.
+		
+		\bibitem{Akiba2019Optuna} 
+		T. Akiba, S. Sano, T. Yanase, T. Ohta, and M. Koyama, \emph{Optuna: A Next-generation Hyperparameter Optimization Framework}, Preprint, compiled July 26, 2019.
+		
+		
+		\bibitem{Wang2023TaskScheduling} 
+		Y. Wang, S. Dong, and W. Fan, \emph{Task Scheduling Mechanism Based on Reinforcement Learning in Cloud Computing}, Mathematics, vol. 11, 3364, 2023, doi:10.3390/math11153364.
+		
 	\end{thebibliography}
+	
+	\section{\label{sec:appendix}Appendix}
+	The source code for this project is available on GitHub at \url{https://github.com/samkrdev/Hybrid-ACO-RL-Task-assigner}.
+	
+	
 	
 \end{document}

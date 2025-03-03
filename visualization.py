@@ -139,7 +139,8 @@ def draw_aco_network(
         show_attributes: bool = True
 ) -> None:
     """
-    Draw the task sequence determined by ACO.
+    Draw the task sequence determined by ACO with improved layout to reduce overlapping.
+    Uses a structured layout with hair pin bends to prevent edge overlaps.
 
     Args:
         task_sequence: Sequence of tasks as determined by ACO
@@ -165,16 +166,48 @@ def draw_aco_network(
     for i in range(len(task_sequence) - 1):
         G.add_edge(task_sequence[i].id, task_sequence[i + 1].id)
 
-    # Try to use graphviz for better layout if available
-    try:
-        from networkx.drawing.nx_agraph import graphviz_layout
-        pos = graphviz_layout(G, prog="dot", args="-Grankdir=LR")  # Left to right
-    except Exception:
-        logger.warning("Graphviz not found; using spring_layout.")
-        pos = nx.spring_layout(G, k=0.9, iterations=300, seed=42)
+    # Create a larger figure for better spacing
+    plt.figure(figsize=(16, 10))
 
-    # Set up the plot
-    plt.figure(figsize=(14, 8))
+    # Create a custom layout to avoid overlapping
+    try:
+        # Try using graphviz for better layout if available
+        try:
+            from networkx.drawing.nx_agraph import graphviz_layout
+            # Use specific layout parameters to improve separation and routing
+            pos = graphviz_layout(
+                G,
+                prog="dot",
+                args="-Grankdir=LR -Goverlap=false -Gsplines=ortho -Gsep=0.5 -Gnodesep=1.0 -Granksep=2.0"
+            )
+        except ImportError:
+            # Custom grid-based layout if graphviz not available
+            logger.warning("Graphviz not available, creating custom grid layout")
+            pos = {}
+
+            # Calculate optimal grid dimensions
+            nodes = list(G.nodes())
+            n_nodes = len(nodes)
+            grid_width = int(np.sqrt(n_nodes) * 1.5)  # Make grid wider than tall
+            grid_height = int(np.ceil(n_nodes / grid_width))
+
+            # Position nodes in a grid pattern
+            for i, node in enumerate(nodes):
+                row = i // grid_width
+                col = i % grid_width
+
+                # Calculate position with spacing
+                x = col * 3.0
+
+                # Stagger rows to reduce direct overlaps
+                y = row * 2.0
+                if col % 2 == 1:
+                    y += 0.5  # Stagger alternating columns
+
+                pos[node] = (x, y)
+    except Exception as e:
+        logger.warning(f"Error creating layout: {e}. Using basic spring layout.")
+        pos = nx.spring_layout(G, k=2.0, iterations=500, seed=42)
 
     # Set node colors based on priority
     node_colors = []
@@ -183,49 +216,83 @@ def draw_aco_network(
         color_intensity = 0.2 + (priority / 5) * 0.8
         node_colors.append((0.1, 0.5, color_intensity))
 
-    # Draw the graph
-    nx.draw(
-        G,
-        pos,
-        with_labels=True,
+    # Draw nodes with good size for readability
+    nx.draw_networkx_nodes(
+        G, pos,
+        node_size=2000,
         node_color=node_colors,
-        node_size=1800,
-        arrowsize=20,
-        arrowstyle="-|>",
-        edge_color="gray",
-        font_weight="bold",
-        font_color="white",
+        edgecolors="black",
+        alpha=0.8
     )
 
-    # Add node labels showing task sequence numbers
-    if show_attributes:
-        labels = {}
-        for node in G.nodes():
-            attr = task_attrs[node]
-            label = f"#{attr['idx'] + 1}\nHrs: {attr['hours']}\nPri: {attr['priority']}"
-            labels[node] = label
+    # Draw edges with hair pin routing to prevent overlaps
+    edge_styles = []
+    for edge in G.edges():
+        # Calculate custom routing parameters for each edge
+        source, target = edge
+        source_x, source_y = pos[source]
+        target_x, target_y = pos[target]
 
-        nx.draw_networkx_labels(
+        # Calculate routing parameters - create a hairpin bend
+        # If nodes are far apart horizontally, bend more
+        dist = abs(target_x - source_x)
+        rad = min(0.5, 0.1 + 0.05 * dist)
+
+        # Alternate direction for odd/even edges to prevent overlaps
+        index = list(G.edges()).index(edge)
+        if index % 2 == 0:
+            rad *= -1
+
+        edge_styles.append(rad)
+
+    # Draw edges with custom routing
+    for i, edge in enumerate(G.edges()):
+        nx.draw_networkx_edges(
             G, pos,
-            labels=labels,
-            font_size=9,
-            font_color="white"
+            edgelist=[edge],
+            width=1.5,
+            arrowsize=15,
+            arrowstyle="-|>",
+            edge_color="gray",
+            connectionstyle=f"arc3,rad={edge_styles[i]}"
         )
 
-    # Add skill labels below nodes
+    # Draw node labels (IDs only)
+    nx.draw_networkx_labels(
+        G, pos,
+        font_size=10,
+        font_weight="bold",
+        font_color="white"
+    )
+
+    # Draw additional task information with careful positioning
     if show_attributes:
-        for node, (x, y) in pos.items():
-            skills = task_attrs[node]['skills']
+        for node in G.nodes():
+            x, y = pos[node]
+            attr = task_attrs[node]
+
+            # Display task index in a compact label below node
             plt.text(
-                x, y - 0.1,
-                f"Skills: {skills}",
+                x, y - 0.2,
+                f"#{attr['idx'] + 1} | Hrs: {attr['hours']} | Pri: {attr['priority']}",
                 ha='center',
                 va='center',
                 bbox=dict(boxstyle="round,pad=0.2", fc="white", ec="gray", alpha=0.8),
+                fontsize=9,
+                fontweight='bold'
+            )
+
+            # Display skills in a separate location to reduce overlap
+            plt.text(
+                x, y - 0.4,
+                f"Skills: {attr['skills']}",
+                ha='center',
+                va='center',
+                bbox=dict(boxstyle="round,pad=0.2", fc="lightyellow", ec="goldenrod", alpha=0.8),
                 fontsize=8
             )
 
-    plt.title(title, fontsize=16)
+    plt.title(title, fontsize=16, fontweight='bold')
     plt.axis("off")
     plt.tight_layout()
 
@@ -275,7 +342,7 @@ def plot_gantt_chart_for_assignments(
         filename: Optional[str] = None
 ) -> None:
     """
-    Create a Gantt chart for task assignments with simplified look and due dates in bars.
+    Create an improved Gantt chart for task assignments with better alignment of capacity limit bars.
 
     Args:
         approach_name: Name of the assignment approach
@@ -324,6 +391,9 @@ def plot_gantt_chart_for_assignments(
     # Define color map for employees based on their skills
     employee_colors = {emp.id: get_employee_color(emp) for emp in employees}
 
+    # Improved bar height for better visibility
+    bar_height = 0.6
+
     # Plot the bars for assigned tasks
     for emp_id, schedule in employee_schedule.items():
         emp_idx = employee_index_map[emp_id]
@@ -335,17 +405,14 @@ def plot_gantt_chart_for_assignments(
             # Calculate task duration
             duration = end - start
 
-            # Determine bar color (use employee's color)
-            bar_color = emp_color
-
             # Plot the bar
             bar = ax.barh(
                 y=emp_idx,
                 width=duration,
                 left=start,
-                height=0.5,
+                height=bar_height,
                 align="center",
-                color=bar_color,
+                color=emp_color,
                 edgecolor="black",
                 alpha=0.8
             )
@@ -364,7 +431,7 @@ def plot_gantt_chart_for_assignments(
                 f"{task_id}\nDue: {due_date.strftime('%m-%d')}",
                 va="center",
                 ha="center",
-                color="white" if bar_color in ["#3498db", "#9b59b6", "#e74c3c", "#8b4513"] else "black",
+                color="white" if emp_color in ["#3498db", "#9b59b6", "#e74c3c", "#8b4513"] else "black",
                 fontsize=8,
                 fontweight="bold",
                 bbox=dict(boxstyle="round,pad=0.1", fc="none", ec="none", alpha=0.1)
@@ -381,36 +448,64 @@ def plot_gantt_chart_for_assignments(
                     fontsize=10
                 )
 
-    # Add capacity markers for each employee
+    # Get overall maximum time for x-axis limits
+    all_end_times = [end for schedule in employee_schedule.values() for _, _, end, _ in schedule]
+    max_time = max([emp.weekly_available_hours for emp in employees] + all_end_times + [40])  # Default to 40 if empty
+
+    # Add capacity markers for each employee - USING DOTS INSTEAD OF LINES
     for i, emp in enumerate(employees):
-        ax.axvline(
-            x=emp.weekly_available_hours,
-            ymin=(i - 0.25) / (len(employees) + 1),
-            ymax=(i + 0.25) / (len(employees) + 1),
-            color="red",
-            linestyle="--",
-            linewidth=1.5
+        # Calculate exact hours limits
+        limit_hours = emp.weekly_available_hours
+
+        # Add a distinct dot marker at the exact limit position
+        ax.scatter(
+            [limit_hours],  # X position exactly at the hour limit
+            [i],  # Y position at the employee's row
+            marker='o',  # Circular marker
+            s=100,  # Size of marker
+            color='red',  # Red color
+            edgecolor='black',  # Black edge for contrast
+            zorder=10  # Ensure it's drawn on top
         )
 
-        # Add label for capacity
+        # Add vertical dotted line for reference
+        ax.plot(
+            [limit_hours, limit_hours],  # Vertical line at exact hour limit
+            [i - 0.4, i + 0.4],  # Extending slightly above and below the row
+            linestyle=':',  # Dotted line
+            color='red',  # Red color
+            linewidth=1.5,  # Thin line
+            alpha=0.7,  # Slightly transparent
+            zorder=5  # Below the dot marker but above other elements
+        )
+
+        # Add limit label with exact positioning
         ax.text(
-            emp.weekly_available_hours + 0.5,
-            i,
-            f"Limit: {emp.weekly_available_hours}h",
-            va="center",
-            ha="left",
-            fontsize=8,
-            color="red"
+            limit_hours + 0.3,  # Positioned right after the capacity marker
+            i,  # At employee's row
+            f"Limit: {limit_hours}h",  # Text label
+            va="center",  # Vertically centered
+            ha="left",  # Left-aligned
+            fontsize=9,  # Font size
+            color="red",  # Red text
+            fontweight="bold",  # Bold text
+            bbox=dict(  # Background box
+                boxstyle="round,pad=0.2",
+                fc="white",  # White background
+                ec="red",  # Red edge
+                alpha=0.9  # Nearly opaque
+            ),
+            zorder=15  # On top of everything
         )
 
-    # Plot unassigned tasks at the bottom
+    # Plot unassigned tasks at the bottom with improved visibility
     if unassigned_tasks:
         unassigned_row = len(employees)
 
-        # Add a separator line
-        ax.axhline(y=unassigned_row - 0.5, color='gray', linestyle='--', alpha=0.7)
+        # Add a more prominent separator line
+        ax.axhline(y=unassigned_row - 0.5, color='black', linestyle='-', linewidth=1.5, alpha=0.8)
 
-        # Add unassigned tasks label
+        # Add unassigned tasks label with better visibility
         ax.text(
             0,
             unassigned_row,
@@ -419,7 +514,8 @@ def plot_gantt_chart_for_assignments(
             ha="left",
             color="black",
             fontsize=10,
-            fontweight="bold"
+            fontweight="bold",
+            bbox=dict(boxstyle="round,pad=0.3", fc="mistyrose", ec="red", alpha=0.8)
         )
 
     # Configure plot appearance
@@ -429,8 +525,13 @@ def plot_gantt_chart_for_assignments(
     ax.set_ylabel("Employees (colored by primary skill)")
     ax.set_title(f"Task Assignment Gantt Chart - {approach_name}")
 
-    # Add grid for readability
-    ax.grid(axis="x", linestyle="--", alpha=0.3)
+    # Add grid for readability with improved visibility
+    ax.grid(axis="x", linestyle="--", alpha=0.4)
+
+    # Add alternating row backgrounds for better readability
+    for i in range(len(employees)):
+        if i % 2 == 0:  # Every other row
+            ax.axhspan(i - 0.5, i + 0.5, color="lightgray", alpha=0.15)
 
     # Add skill color legend
     skill_patches = []
@@ -442,9 +543,6 @@ def plot_gantt_chart_for_assignments(
     ax.legend(handles=skill_patches, title="Employee Skills", loc="upper right")
 
     # Set reasonable x-axis limits
-    max_time = max([emp.weekly_available_hours for emp in employees] +
-                   [end for schedule in employee_schedule.values()
-                    for _, _, end, _ in schedule] + [40])  # Default to 40 if empty
     ax.set_xlim(0, max_time * 1.1)  # Add 10% padding
 
     plt.tight_layout()

@@ -200,9 +200,9 @@
   },
   "best_methods": {
     "resource_utilization": "Q-learning After",
-    "dependency_completion_rate": "Greedy",
+    "task_coverage": "Q-learning Before",
     "workload_balance_ratio": "Q-learning After",
     "assigned_priority_ratio": "Greedy",
-    "task_coverage": "Q-learning Before"
+    "dependency_completion_rate": "Greedy"
   }
 }
